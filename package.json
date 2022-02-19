@@ -20,6 +20,7 @@
     "@emotion/react": "^11.8.0",
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.8.0",
+    "@ensdomains/ensjs": "^2.1.0",
     "@mdi/js": "^6.5.95",
     "@mdi/react": "^1.5.0",
     "@svgr/webpack": "^6.2.1",

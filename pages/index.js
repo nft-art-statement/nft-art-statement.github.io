@@ -6,9 +6,11 @@ import { abi } from '../utils/abi'
 import tw from 'twin.macro'
 import fetch from 'isomorphic-unfetch'
 import axios from 'axios'
-import { Markdown } from "../components/Markdown"
+import { Markdown } from '../components/Markdown'
+import { Button } from '../components/Button'
 
-const Container = tw.div`w-full tracking-wide leading-relaxed max-w-screen-lg mx-auto px-8 text-justify`
+const Container = tw.div`mt-16 w-full tracking-wide leading-relaxed max-w-screen-lg mx-auto px-8 text-justify`
+const SignContainer = tw.div`w-full flex justify-center mt-10 mb-20`
 
 const Home = ({data}) => {
   const [mintedNFT, setMintedNFT] = useState(null)
@@ -165,30 +167,21 @@ const Home = ({data}) => {
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
       <Container>
-        {currentAccount === '' ? (
-          <button
-            tw='text-2xl text-white font-bold py-3 px-12 bg-black shadow-lg shadow-[#6FFFE9] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out'
-            onClick={connectWallet}
-          >
-            Connect Wallet
-          </button>
-        ) : correctNetwork ? (
-          <button
-            tw='text-2xl text-white font-bold py-3 px-12 bg-black shadow-lg shadow-[#6FFFE9] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out'
-            onClick={mintCharacter}
-          >
-            Mint Character
-          </button>
-        ) : (
-          <div tw='flex flex-col justify-center items-center mb-20 font-bold text-2xl gap-y-3'>
-            <div>----------------------------------------</div>
-            <div>Please connect to the Rinkeby Testnet</div>
-            <div>and reload the page</div>
-            <div>----------------------------------------</div>
-          </div>
-        )}
-
         <Markdown contents={data} />
+        <SignContainer>
+          {currentAccount === '' ? (
+            <Button onClick={connectWallet}>Connect Wallet</Button>
+          ) : correctNetwork ? (
+            <Button onClick={mintCharacter}>Sign Statement</Button>
+          ) : (
+            <div tw='flex flex-col justify-center items-center mb-20 font-bold text-2xl gap-y-3'>
+              <div>----------------------------------------</div>
+              <div>Please connect to the Rinkeby Testnet</div>
+              <div>and reload the page</div>
+              <div>----------------------------------------</div>
+            </div>
+          )}
+        </SignContainer>
       </Container>
     </>
   )
