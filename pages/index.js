@@ -2,8 +2,7 @@ import tw from 'twin.macro'
 
 const Container = tw.div`w-full h-screen bg-red-500`
 
-const Home = (props) => {
-  console.log(props)
+const Home = () => {
   return (
     <Container>
 
@@ -12,7 +11,3 @@ const Home = (props) => {
 }
 
 export default Home
-
-export const getServerSideProps = async () => {
-
-}
