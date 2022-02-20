@@ -19,10 +19,9 @@ export const Footer = () => {
         <Link href={`https://etherscan.io/address/${nftContractAddress}`}>
           <Icon path={mdiEthereum} size={1} /><span>Etherscan</span>
         </Link>
-        {/*FIXME: 本番用のOpenseaCollectionに変更*/}
-        {/*<Link href={'https://testnets.opensea.io/collection/community-statement-on-nft-art-thzmebc118'}>*/}
-        {/*  OpenSea*/}
-        {/*</Link>*/}
+        <Link href={'https://opensea.io/collection/community-statement-on-nft-art'}>
+          OpenSea
+        </Link>
       </LinksContainer>
       <CopyContainer>
         <Copyright>&copy;{new Date().getFullYear()} The community statement drafting team</Copyright>
