@@ -2,7 +2,6 @@ import { SEO } from "../components/SEO";
 import dynamic from "next/dynamic";
 import {Heading3, Heading4, Leading1} from "../components/Typography";
 import { useState, useEffect } from "react";
-import { useWindowSize } from "react-use";
 import { nftContractAddress } from "../config";
 import { ethers } from "ethers";
 import { abi } from "../utils/abi";
@@ -18,6 +17,7 @@ import LogoImg from '../assets/logo_CommunityStatementonNFTart.png'
 
 const HeroContainer = tw.div`flex justify-center`;
 // const Hero = dynamic(() => import("../components/Sketch"), { ssr: false });
+const HeroLink = tw.a``;
 const HeroImg = tw.img`w-full max-w-[800px] mx-auto`
 const Container = tw.div`w-full tracking-wide leading-relaxed md:px-8 px-6`;
 const StatementDownloadButton = tw.div`fixed top-8 right-8`;
@@ -114,7 +114,9 @@ const Home = ({ data }) => {
       </StatementDownloadButton>
       <HeroContainer>
         {/*<Hero />*/}
-        <HeroImg src={LogoImg.src} alt={"The community statement drafting team"} />
+        <HeroLink href={'https://openprocessing.org/sketch/1491110'}>
+          <HeroImg src={LogoImg.src} alt={"The community statement drafting team"} />
+        </HeroLink>
       </HeroContainer>
       <Container>
         <StatementContainer>
