@@ -135,7 +135,7 @@ const Home = ({ data }) => {
           <Leading1>All contents are the same</Leading1>
           <Leading1>No transfer or burn is allowed after the mint</Leading1>
           <SignButtonContainer>
-            {account === undefined ? (
+            {account === undefined || account === null ? (
               <Button onClick={activateBrowserWallet}>Connect Wallet</Button>
             ) : correctNetwork ? (
               <div tw={"flex flex-col justify-center gap-y-6"}>
