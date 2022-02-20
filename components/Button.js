@@ -1,3 +1,4 @@
 import tw from 'twin.macro'
 
-export const Button = tw.button`px-5 py-2 rounded-full bg-blue-500 text-white font-bold text-lg`
+export const Button = tw.button`px-8 py-3 rounded-full bg-white text-black shadow`;
+export const ButtonLink = tw.a`px-8 py-3 rounded-full bg-white text-black shadow`;

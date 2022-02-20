@@ -1,5 +1,6 @@
 import { SEO } from "../components/SEO";
-import Iframe from "react-iframe";
+// import { HeroSketch } from "../components/Sketch";
+import dynamic from "next/dynamic";
 import { Heading3, Leading1 } from "../components/Typography";
 import { useState, useEffect } from "react";
 import { nftContractAddress } from "../config";
@@ -8,14 +9,19 @@ import { abi } from "../utils/abi";
 import tw from "twin.macro";
 import fetch from "isomorphic-unfetch";
 import { Markdown } from "../components/Markdown";
-import { Button } from "../components/Button";
+import { Button, ButtonLink } from "../components/Button";
+import { Footer } from "../components/Footer";
 import { ChainId, useContractFunction, useEthers } from "@usedapp/core";
 
-const HeroContainer = tw.div``;
+const HeroContainer = tw.div`flex justify-center`;
+const Hero = dynamic(() => import("../components/Sketch"), { ssr: false });
 const Container = tw.div`w-full tracking-wide leading-relaxed md:px-8 px-2`;
+const StatementDownloadButton = tw.div`fixed top-8 right-8`;
 const StatementContainer = tw.div`border-b border-gray-900 md:pb-16 pb-8`;
 const StatementInner = tw.div`max-w-screen-lg mx-auto text-justify`;
-const SignContainer = tw.div``;
+const SignerContainer = tw.div`max-w-screen-lg mx-auto px-8`;
+const Signer = tw.p`mt-4`
+const SignContainer = tw.div`max-w-screen-lg mx-auto text-justify`;
 const SignButtonContainer = tw.div`w-full flex justify-center mt-10 mb-20`;
 const SIGNER_AMOUNT_TO_DISPLAY = 10;
 
@@ -97,11 +103,11 @@ const Home = ({ data }) => {
   return (
     <>
       <SEO />
+      <StatementDownloadButton>
+        <ButtonLink href="https://gateway.pinata.cloud/ipfs/Qmbuc7FMZ2qsUjSMtTG6FoD6sAigCzS9AyJUtQF2cMX4Qe" target={"_blank"} rel={"noreferrer noopener"}>Download</ButtonLink>
+      </StatementDownloadButton>
       <HeroContainer>
-        <Iframe url={'https://openprocessing.org/sketch/1491110/embed/'}
-                width={'100%'}
-                height={'900'}
-        />
+        <Hero />
       </HeroContainer>
       <Container>
         <StatementContainer>
@@ -109,6 +115,13 @@ const Home = ({ data }) => {
             <Markdown contents={data} />
           </StatementInner>
         </StatementContainer>
+        <SignerContainer>
+          {
+            signerListWithENS?.map(signer => (
+              <Signer key={`signer-${signer}`}>{signer}</Signer>
+            ))
+          }
+        </SignerContainer>
         <SignContainer>
           <Heading3>本ステートメントへの署名について</Heading3>
           <Leading1>ウォレットを接続することにより、本ステートメントに署名できます。その際、署名のみ実行する、署名と同時に本ステートメントのNFTをmintする、の2つから選択できます。なお、1つのウォレットにつき署名できるのは1回だけです。</Leading1>
@@ -135,6 +148,7 @@ const Home = ({ data }) => {
           </SignButtonContainer>
         </SignContainer>
       </Container>
+      <Footer />
     </>
   );
 };

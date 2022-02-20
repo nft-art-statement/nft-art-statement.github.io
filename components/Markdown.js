@@ -33,7 +33,6 @@ const Container = styled.div(() => [
     list-style-type: disc;
     li {
       margin-bottom: 1rem;
-      font-weight: bold;
     }
   }
   hr {
