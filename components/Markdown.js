@@ -5,17 +5,25 @@ const Container = styled.div(() => [
   `h1 {
     font-size: 2.5rem;
     font-weight: bold;
-    color: red;
+    @media screen and () {
+      
+    }
   }
   h2 {
     font-size: 2rem;
     margin-top: 2rem;
+    @media screen and () {
+      
+    }
   }
   p {
     font-size: 1.2rem;
     margin-top: 2rem;
     padding-left: 2rem;
     padding-right: 2rem;
+    @media screen and () {
+      
+    }
   }
   ul {
     font-size: 1.2rem;
@@ -25,6 +33,7 @@ const Container = styled.div(() => [
     list-style-type: disc;
     li {
       margin-bottom: 1rem;
+      font-weight: bold;
     }
   }
   hr {
