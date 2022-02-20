@@ -2,6 +2,7 @@ import { SEO } from "../components/SEO";
 import dynamic from "next/dynamic";
 import {Heading3, Heading4, Leading1} from "../components/Typography";
 import { useState, useEffect } from "react";
+import { useWindowSize } from "react-use";
 import { nftContractAddress } from "../config";
 import { ethers } from "ethers";
 import { abi } from "../utils/abi";
@@ -13,16 +14,18 @@ import { Footer } from "../components/Footer";
 import { ChainId, useContractFunction, useEthers } from "@usedapp/core";
 import { mdiTwitter } from "@mdi/js";
 import Icon from "@mdi/react";
+import LogoImg from '../assets/logo_CommunityStatementonNFTart.png'
 
 const HeroContainer = tw.div`flex justify-center`;
-const Hero = dynamic(() => import("../components/Sketch"), { ssr: false });
+// const Hero = dynamic(() => import("../components/Sketch"), { ssr: false });
+const HeroImg = tw.img`w-full max-w-[800px] mx-auto`
 const Container = tw.div`w-full tracking-wide leading-relaxed md:px-8 px-2`;
 const StatementDownloadButton = tw.div`fixed top-8 right-8`;
 const StatementContainer = tw.div`border-b border-gray-900 md:pb-16 pb-8`;
 const StatementInner = tw.div`max-w-screen-lg mx-auto text-justify`;
 const SignerContainer = tw.div`border-b border-gray-900 md:pb-16 pb-8 md:pt-10 pt-8`;
 const SignerInner = tw.div`max-w-screen-lg mx-auto`
-const Signer = tw.p`mt-4`
+const Signer = tw.p`mt-3 truncate`
 const SignContainer = tw.div`max-w-screen-lg mx-auto text-justify md:pb-16 pb-8 md:pt-10 pt-8`;
 const SignButtonContainer = tw.div`w-full flex justify-center mt-10 mb-20`;
 const SIGNER_AMOUNT_TO_DISPLAY = 10;
@@ -31,6 +34,8 @@ const TwitterShareLink = tw.a`inline-flex rounded-full px-4 py-2 shadow`
 
 const Home = ({ data }) => {
   const { account, activateBrowserWallet, chainId, library } = useEthers();
+  const { width } = useWindowSize()
+  console.log(LogoImg)
 
   const [mintedNFT, setMintedNFT] = useState(null);
   const [miningStatus, setMiningStatus] = useState(null);
@@ -111,7 +116,8 @@ const Home = ({ data }) => {
         <ButtonLink href="https://gateway.pinata.cloud/ipfs/Qmbuc7FMZ2qsUjSMtTG6FoD6sAigCzS9AyJUtQF2cMX4Qe" target={"_blank"} rel={"noreferrer noopener"}>Download</ButtonLink>
       </StatementDownloadButton>
       <HeroContainer>
-        <Hero />
+        {/*<Hero />*/}
+        <HeroImg src={LogoImg.src} alt={"The community statement drafting team"} />
       </HeroContainer>
       <Container>
         <StatementContainer>
@@ -121,7 +127,7 @@ const Home = ({ data }) => {
         </StatementContainer>
         <SignerContainer>
           <SignerInner>
-            <Heading3 tw={"mb-8"}>署名者一覧 / Signer</Heading3>
+            <Heading3 tw={"mb-8"}>ステートメントの署名者 - Signers of the statement</Heading3>
             {
               signerListWithENS?.map(signer => (
                 <Signer key={`signer-${signer}`}>{signer}</Signer>
