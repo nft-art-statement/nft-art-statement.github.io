@@ -19,6 +19,9 @@ const Home = ({data}) => {
   const [txError, setTxError] = useState(null)
   const [currentAccount, setCurrentAccount] = useState('')
   const [correctNetwork, setCorrectNetwork] = useState(false)
+  const [signerList, setSignerList] = useState([]);
+  const [signerListWithENS, setSignerListWithENS] = useState([]);
+  const SIGNER_AMOUNT_TO_DISPLAY = 10;
 
   // Checks if wallet is connected
   const checkIfWalletIsConnected = async () => {
@@ -92,6 +95,54 @@ const Home = ({data}) => {
     checkIfWalletIsConnected()
     checkCorrectNetwork()
   }, [])
+
+  // Fetch all signer address list by Sign events
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const { ethereum } = window;
+
+        if (ethereum) {
+          const provider = new ethers.providers.Web3Provider(ethereum);
+          const nftContract = new ethers.Contract(
+            nftContractAddress,
+            abi,
+            provider
+          );
+
+          const signEvents = await nftContract.queryFilter("Sign");
+          const signerAddresses = signEvents
+            .sort((a, b) => b.blockNumber - a.blockNumber)
+            .map((e) => e.args.signer);
+          setSignerList(signerAddresses);
+          setSignerListWithENS(
+            signerAddresses.slice(0, SIGNER_AMOUNT_TO_DISPLAY)
+          );
+        } else {
+          console.log("Ethereum object doesn't exist!");
+        }
+      } catch (error) {
+        console.log("Error minting character", error);
+        setTxError(error.message);
+      }
+    };
+    f();
+  }, []);
+
+  // map ens name to signer addresses of first specified amount
+  useEffect(() => {
+    const provider = new ethers.providers.Web3Provider(ethereum);
+    const f = async () => {
+      const nameList = await Promise.all(
+        signerList.slice(0, SIGNER_AMOUNT_TO_DISPLAY).map(async (signer) => {
+          const name = await provider.lookupAddress(signer);
+          return name == null ? signer : name;
+        })
+      );
+      setSignerListWithENS(nameList);
+    };
+    f();
+  }, [signerList]);
 
   // Creates transaction to mint NFT on clicking Mint Character button
   const mintCharacter = async () => {
