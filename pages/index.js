@@ -34,9 +34,6 @@ const TwitterShareLink = tw.a`inline-flex rounded-full px-4 py-2 shadow`
 
 const Home = ({ data }) => {
   const { account, activateBrowserWallet, chainId, library } = useEthers();
-  const { width } = useWindowSize()
-  console.log(LogoImg)
-
   const [mintedNFT, setMintedNFT] = useState(null);
   const [miningStatus, setMiningStatus] = useState(null);
   const [loadingState, setLoadingState] = useState(0);

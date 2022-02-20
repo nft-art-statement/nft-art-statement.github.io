@@ -4,7 +4,7 @@ import { mdiEthereum, mdiGithub } from "@mdi/js";
 import { nftContractAddress } from "../config";
 
 const Container = tw.footer`bg-gray-300 px-8 py-10`;
-const LinksContainer = tw.div`flex justify-end gap-x-10`;
+const LinksContainer = tw.div`flex justify-center gap-x-10`;
 const Link = tw.a`text-gray-700 flex gap-x-1`;
 const CopyContainer = tw.div`flex justify-center mt-10`;
 const Copyright = tw.p``;
