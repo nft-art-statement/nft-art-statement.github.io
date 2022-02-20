@@ -19,7 +19,7 @@ import LogoImg from '../assets/logo_CommunityStatementonNFTart.png'
 const HeroContainer = tw.div`flex justify-center`;
 // const Hero = dynamic(() => import("../components/Sketch"), { ssr: false });
 const HeroImg = tw.img`w-full max-w-[800px] mx-auto`
-const Container = tw.div`w-full tracking-wide leading-relaxed md:px-8 px-2`;
+const Container = tw.div`w-full tracking-wide leading-relaxed md:px-8 px-6`;
 const StatementDownloadButton = tw.div`fixed top-8 right-8`;
 const StatementContainer = tw.div`border-b border-gray-900 md:pb-16 pb-8`;
 const StatementInner = tw.div`max-w-screen-lg mx-auto text-justify`;
