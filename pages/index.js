@@ -155,7 +155,7 @@ const Home = ({ data }) => {
                 <Button onClick={() => signAndMint()}>署名してNFTをmintする<br />Sign and mint an NFT</Button>
               </div>
             ) : (
-              <Leading1 tw={"text-red-500 font-bold"}>Please connect to the Rinkeby Testnet and reload the page</Leading1>
+              <Leading1 tw={"text-red-500 font-bold"}>Please connect to the Ethereum Mainnet and reload the page</Leading1>
             )}
           </SignButtonContainer>
           <ShareContainer>
