@@ -4,7 +4,7 @@ import { ChainId, DAppProvider } from "@usedapp/core";
 
 const config = {
   // TODO switch to mainnet
-  readOnlyChainId: ChainId.Rinkeby,
+  readOnlyChainId: ChainId.Mainnet,
   readOnlyUrls: {
     [ChainId.Mainnet]: `https://mainnet.infura.io/v3/${INFURA_ID}`,
     [ChainId.Rinkeby]: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
