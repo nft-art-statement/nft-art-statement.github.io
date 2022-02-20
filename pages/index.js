@@ -42,7 +42,7 @@ const Home = ({ data }) => {
   const [signerListWithENS, setSignerListWithENS] = useState([]);
 
   // TODO switch to mainnet
-  const correctNetwork = chainId === ChainId.Rinkeby;
+  const correctNetwork = chainId === ChainId.Mainnet;
   const nftContract = new ethers.Contract(
     nftContractAddress,
     new ethers.utils.Interface(abi),
