@@ -121,7 +121,7 @@ const Home = ({ data }) => {
         </StatementContainer>
         <SignerContainer>
           <SignerInner>
-            <Heading3>署名者一覧 / Signer</Heading3>
+            <Heading3 tw={"mb-8"}>署名者一覧 / Signer</Heading3>
             {
               signerListWithENS?.map(signer => (
                 <Signer key={`signer-${signer}`}>{signer}</Signer>
