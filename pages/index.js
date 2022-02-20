@@ -5,110 +5,56 @@ import { ethers } from "ethers";
 import { abi } from "../utils/abi";
 import tw from "twin.macro";
 import fetch from "isomorphic-unfetch";
-import axios from "axios";
 import { Markdown } from "../components/Markdown";
 import { Button } from "../components/Button";
+import { ChainId, useContractFunction, useEthers } from "@usedapp/core";
 
 const Container = tw.div`mt-16 w-full tracking-wide leading-relaxed max-w-screen-lg mx-auto px-8 text-justify`;
 const SignContainer = tw.div`w-full flex justify-center mt-10 mb-20`;
 const SIGNER_AMOUNT_TO_DISPLAY = 10;
-// TODO switch to mainnet
-const infura = "https://rinkeby.infura.io/v3/3ee178f96e63405181f410fe91325b3b";
-const provider = new ethers.providers.JsonRpcProvider(infura);
 
 const Home = ({ data }) => {
+  const { account, activateBrowserWallet, chainId, library } = useEthers();
+
   const [mintedNFT, setMintedNFT] = useState(null);
   const [miningStatus, setMiningStatus] = useState(null);
   const [loadingState, setLoadingState] = useState(0);
   const [txError, setTxError] = useState(null);
-  const [currentAccount, setCurrentAccount] = useState("");
-  const [correctNetwork, setCorrectNetwork] = useState(false);
   const [signerList, setSignerList] = useState([]);
   const [signerListWithENS, setSignerListWithENS] = useState([]);
 
-  // TODO put as a demo. Remove this one.
-  // console.log(signerList, signerListWithENS);
+  // TODO switch to mainnet
+  const correctNetwork = chainId === ChainId.Rinkeby;
+  const nftContract = new ethers.Contract(
+    nftContractAddress,
+    new ethers.utils.Interface(abi),
+    library
+  );
+  const { state: signState, send: sign } = useContractFunction(
+    nftContract,
+    "signToStatement"
+  );
+  const { state: signAndMintState, send: signAndMint } = useContractFunction(
+    nftContract,
+    "signToStatementAndMintBadge"
+  );
 
-  // Checks if wallet is connected
-  const checkIfWalletIsConnected = async () => {
-    const { ethereum } = window;
-    if (ethereum) {
-      console.log("Got the ethereum obejct: ", ethereum);
-    } else {
-      console.log("No Wallet found. Connect Wallet");
-    }
-
-    const accounts = await provider.send("eth_accounts");
-
-    if (accounts.length !== 0) {
-      console.log("Found authorized Account: ", accounts[0]);
-      setCurrentAccount(accounts[0]);
-    } else {
-      console.log("No authorized account found");
-    }
-  };
-
-  // Calls Metamask to connect wallet on clicking Connect Wallet button
-  const connectWallet = async () => {
-    try {
-      let chainId = await provider.send("eth_chainId");
-      console.log("Connected to chain:" + chainId);
-
-      const rinkebyChainId = "0x4";
-
-      const devChainId = 1337;
-      const localhostChainId = `0x${Number(devChainId).toString(16)}`;
-
-      if (chainId !== rinkebyChainId && chainId !== localhostChainId) {
-        alert("You are not connected to the Rinkeby Testnet!");
-        return;
-      }
-
-      const accounts = await provider.send({
-        method: "eth_requestAccounts",
-        params: [],
-      });
-
-      console.log("Found account", accounts[0]);
-      setCurrentAccount(accounts[0]);
-    } catch (error) {
-      console.log("Error connecting to metamask", error);
-    }
-  };
-
-  // Checks if wallet is connected to the correct network
-  const checkCorrectNetwork = async () => {
-    const { ethereum } = window;
-    let chainId = await ethereum.request({ method: "eth_chainId" });
-    console.log("Connected to chain:" + chainId);
-
-    const rinkebyChainId = "0x4";
-
-    const devChainId = 1337;
-    const localhostChainId = `0x${Number(devChainId).toString(16)}`;
-
-    if (chainId !== rinkebyChainId && chainId !== localhostChainId) {
-      setCorrectNetwork(false);
-    } else {
-      setCorrectNetwork(true);
-    }
-  };
-
-  useEffect(() => {
-    checkIfWalletIsConnected();
-    checkCorrectNetwork();
-  }, []);
+  console.log(
+    account,
+    chainId,
+    signState,
+    signAndMintState,
+    signerList,
+    signerListWithENS
+  );
 
   // Fetch all signer address list by Sign events
   useEffect(() => {
+    if (library === undefined) {
+      return;
+    }
     const f = async () => {
       try {
-        const nftContract = new ethers.Contract(
-          nftContractAddress,
-          abi,
-          provider
-        );
-
         const signEvents = await nftContract.queryFilter("Sign");
         const signerAddresses = signEvents
           .sort((a, b) => b.blockNumber - a.blockNumber)
@@ -117,74 +63,30 @@ const Home = ({ data }) => {
         setSignerListWithENS(
           signerAddresses.slice(0, SIGNER_AMOUNT_TO_DISPLAY)
         );
-        // console.log(signerAddresses);
       } catch (error) {
         console.log("Error minting character", error);
         setTxError(error.message);
       }
     };
     f();
-  }, []);
+  }, [library]);
 
   // map ens name to signer addresses of first specified amount
   useEffect(() => {
+    if (library === undefined) {
+      return;
+    }
     const f = async () => {
       const nameList = await Promise.all(
         signerList.slice(0, SIGNER_AMOUNT_TO_DISPLAY).map(async (signer) => {
-          const name = await provider.lookupAddress(signer);
+          const name = await library.lookupAddress(signer);
           return name == null ? signer : name;
         })
       );
       setSignerListWithENS(nameList);
     };
     f();
-  }, [signerList]);
-
-  // Creates transaction to mint NFT on clicking Mint Character button
-  const mintCharacter = async () => {
-    try {
-      const signer = provider.getSigner();
-      const nftContract = new ethers.Contract(nftContractAddress, abi, signer);
-
-      let nftTx = await nftContract.signToStatementAndMintBadge();
-      console.log("Mining....", nftTx.hash);
-      setMiningStatus(0);
-
-      let tx = await nftTx.wait();
-      setLoadingState(1);
-      console.log("Mined!", tx);
-      let event = tx.events[0];
-      let value = event.args[2];
-      let tokenId = value.toNumber();
-
-      console.log(
-        `Mined, see transaction: https://rinkeby.etherscan.io/tx/${nftTx.hash}`
-      );
-
-      getMintedNFT(tokenId);
-    } catch (error) {
-      console.log("Error minting character", error);
-      setTxError(error.message);
-    }
-  };
-
-  // Gets the minted NFT data
-  const getMintedNFT = async (tokenId) => {
-    try {
-      const signer = provider.getSigner();
-      const nftContract = new ethers.Contract(nftContractAddress, abi, signer);
-
-      let tokenUri = await nftContract.tokenURI(tokenId);
-      let data = await axios.get(tokenUri);
-      let meta = data.data;
-
-      setMiningStatus(1);
-      setMintedNFT(meta.image);
-    } catch (error) {
-      console.log(error);
-      setTxError(error.message);
-    }
-  };
+  }, [library, signerList]);
 
   return (
     <>
@@ -197,10 +99,11 @@ const Home = ({ data }) => {
       <Container>
         <Markdown contents={data} />
         <SignContainer>
-          {currentAccount === "" ? (
-            <Button onClick={connectWallet}>Connect Wallet</Button>
+          {account == undefined ? (
+            <Button onClick={activateBrowserWallet}>Connect Wallet</Button>
           ) : correctNetwork ? (
-            <Button onClick={mintCharacter}>Sign Statement</Button>
+            // <Button onClick={() => sign()}>Sign Statement</Button>
+            <Button onClick={() => signAndMint()}>Sign Statement</Button>
           ) : (
             <div tw="flex flex-col justify-center items-center mb-20 font-bold text-2xl gap-y-3">
               <div>----------------------------------------</div>
