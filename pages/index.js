@@ -132,6 +132,8 @@ const Home = ({ data }) => {
                 <Signer key={`signer-${signer}`}>{signer}</Signer>
               ))
             }
+            <Leading1 tw={"mt-10"}>ここに表示されているのは全署名者のうち最新の10名分です。全ての署名者は<a tw={"text-blue-400"} href={`https://etherscan.io/address/${nftContractAddress}`} target={"_blank"} rel={"noreferrer noopener"}>こちら</a>で確認できます。</Leading1>
+            <Leading1>The list shown here is the latest 10 of all the signers. You can find all the signers <a tw={"text-blue-400"} href={`https://etherscan.io/address/${nftContractAddress}`} target={"_blank"} rel={"noreferrer noopener"}>here</a>.</Leading1>
           </SignerInner>
         </SignerContainer>
         <SignContainer>
